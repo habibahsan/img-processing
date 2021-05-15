@@ -52,6 +52,7 @@ def main():
         if 'front' not in fname and 'back' not in fname:
             shutil.move(file, error_dir)
 
+        #TODO: @fer IndexError: list index out of range
         parts = fname.split('_')
         item = dict(
             base = parts[0],
