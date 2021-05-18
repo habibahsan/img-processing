@@ -7,6 +7,7 @@ from PIL import Image
 in_dir = os.path.normpath('img/**/*')
 dirname = os.path.dirname(__file__)
 error_dir = "error"
+
 def splitfn(fn):
     path, fn = os.path.split(fn)
     name, ext = os.path.splitext(fn)
@@ -44,13 +45,17 @@ def get_concat_resize_v(im1, im2, resample=Image.BICUBIC, resize_big_image=True)
     im.paste(_im2, (0, _im1.height))
     return im
 
+def validate_file(file):
+    pattern = re.compile('(_front)|(front)|(_back)|(back)')
+    if not pattern.findall(file):
+        shutil.move(file, error_dir)
+    return file
+
 def main():
     file_list = {}
     for file in glob.iglob(in_dir, recursive=True):
+        validate_file(file)
         path, fname, ext = splitfn(file)
-
-        if 'front' not in fname and 'back' not in fname:
-            shutil.move(file, error_dir)
 
         #TODO: @fer IndexError: list index out of range
         parts = fname.split('_')
